@@ -10,49 +10,7 @@ model = pickle.load(open("ipl_model.pkl", "rb"))
 
 st.set_page_config(layout="wide")
 st.title("🏏 IPL AI Dashboard (LIVE)")
-
-# -------------------------------
-# LIVE MATCH DATA (API)
-# -------------------------------
-API_KEY = "YOUR_API_KEY"
-
-url = "https://cricket-live-data.p.rapidapi.com/matches"
-
-headers = {
-    "X-RapidAPI-Key": API_KEY,
-    "X-RapidAPI-Host": "cricket-live-data.p.rapidapi.com"
-}
-
-response = requests.get(url, headers=headers)
-
-if response.status_code == 200:
-    matches = response.json()["results"]
-else:
-    matches = []
-from sklearn.linear_model import LogisticRegression
-
-# dummy training
-X = [[50, 30, 5], [20, 10, 2], [80, 50, 7]]
-y = [1, 0, 1]
-
-model = LogisticRegression()
-model.fit(X, y)
-# -------------------------------
-# SHOW LIVE MATCHES
-# -------------------------------
-st.subheader("🔴 Live Matches")
-
-for match in matches[:3]:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown(f"### {match['team1']} vs {match['team2']}")
-        st.write(match['status'])
-
-    with col2:
-        st.metric("Score", match.get("score", "N/A"))
-
-# -------------------------------
+--
 # AI PREDICTOR
 # -------------------------------
 st.subheader("🤖 AI Win Predictor")
