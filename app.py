@@ -10,7 +10,6 @@ model = pickle.load(open("ipl_model.pkl", "rb"))
 
 st.set_page_config(layout="wide")
 st.title("🏏 IPL AI Dashboard (LIVE)")
---
 # AI PREDICTOR
 # -------------------------------
 st.subheader("🤖 AI Win Predictor")
