@@ -5,6 +5,8 @@ from sklearn.linear_model import LinearRegression
 # -------------------------------
 # 📊 Sample dataset
 # -------------------------------
+new_data = pd.DataFrame([[1100, 2]], columns=["Area", "Bedrooms"])
+prediction = model.predict(new_data)
 data = {
     "Area": [600, 800, 1000, 1200, 1500],
     "Bedrooms": [1, 2, 2, 3, 3],
