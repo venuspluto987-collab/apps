@@ -1,12 +1,7 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
-# -------------------------------
-# 📊 Sample dataset
-# -------------------------------
-new_data = pd.DataFrame([[1100, 2]], columns=["Area", "Bedrooms"])
-prediction = model.predict(new_data)
+# Dataset
 data = {
     "Area": [600, 800, 1000, 1200, 1500],
     "Bedrooms": [1, 2, 2, 3, 3],
@@ -15,30 +10,15 @@ data = {
 
 df = pd.DataFrame(data)
 
-# -------------------------------
-# 🎯 Features & Target
-# -------------------------------
+# Train model FIRST
 X = df[["Area", "Bedrooms"]]
 y = df["Price"]
 
-# -------------------------------
-# 🤖 Train Model
-# -------------------------------
 model = LinearRegression()
 model.fit(X, y)
 
-# -------------------------------
-# 🔮 Predict
-# -------------------------------
-prediction = model.predict([[1100, 2]])
+# THEN predict
+new_data = pd.DataFrame([[1100, 2]], columns=["Area", "Bedrooms"])
+prediction = model.predict(new_data)
 
-print("Predicted Price:", prediction[0])
-
-# -------------------------------
-# 📈 Visualization
-# -------------------------------
-plt.scatter(df["Area"], df["Price"])
-plt.xlabel("Area")
-plt.ylabel("Price")
-plt.title("House Price Prediction")
-plt.show()
+print(prediction)
