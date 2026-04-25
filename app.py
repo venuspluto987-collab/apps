@@ -29,7 +29,14 @@ if response.status_code == 200:
     matches = response.json()["results"]
 else:
     matches = []
+from sklearn.linear_model import LogisticRegression
 
+# dummy training
+X = [[50, 30, 5], [20, 10, 2], [80, 50, 7]]
+y = [1, 0, 1]
+
+model = LogisticRegression()
+model.fit(X, y)
 # -------------------------------
 # SHOW LIVE MATCHES
 # -------------------------------
