@@ -6,12 +6,11 @@ from sklearn.linear_model import LogisticRegression
 # PAGE CONFIG
 # -------------------------------
 st.set_page_config(page_title="IPL AI Dashboard", layout="wide")
-st.title("🏏 IPL Win Predictor (ML App)")
+st.title("🏏 IPL Win Predictor (AI + ML)")
 
 # -------------------------------
-# CREATE & TRAIN MODEL
+# TRAIN MODEL (NO PKL)
 # -------------------------------
-# Sample training data (runs_left, balls_left, wickets)
 X = [
     [50, 30, 5],
     [20, 10, 2],
@@ -21,14 +20,13 @@ X = [
     [30, 20, 4]
 ]
 
-# 1 = Win, 0 = Lose
 y = [1, 0, 1, 0, 1, 0]
 
 model = LogisticRegression()
 model.fit(X, y)
 
 # -------------------------------
-# USER INPUT
+# INPUT SECTION
 # -------------------------------
 st.subheader("📊 Match Input")
 
@@ -50,26 +48,51 @@ with col4:
 # CALCULATIONS
 # -------------------------------
 runs_left = max(target - score, 0)
-balls_left = max(120 - (overs * 6), 0)
+balls_left = max(120 - (overs * 6), 1)
 
-# IMPORTANT: must match training format
+required_rr = (runs_left / balls_left) * 6
+
+# Prepare ML input
 input_data = pd.DataFrame(
     [[runs_left, balls_left, wickets]],
     columns=["runs_left", "balls_left", "wickets"]
 )
 
 # -------------------------------
-# PREDICTION
+# PREDICTION (HYBRID LOGIC)
 # -------------------------------
-prob = model.predict_proba(input_data)[0][1]
+ml_prob = model.predict_proba(input_data)[0][1]
+
+if required_rr > 12:
+    final_prob = ml_prob * 0.5
+elif required_rr > 9:
+    final_prob = ml_prob * 0.7
+elif wickets <= 2:
+    final_prob = ml_prob * 0.6
+else:
+    final_prob = ml_prob
+
+final_prob = max(0, min(final_prob, 1))
 
 # -------------------------------
 # OUTPUT
 # -------------------------------
 st.subheader("🤖 Prediction Result")
 
-st.success(f"🔥 Winning Probability: {round(prob * 100, 2)}%")
-st.progress(int(prob * 100))
+st.success(f"🔥 Winning Probability: {round(final_prob * 100, 2)}%")
+st.progress(int(final_prob * 100))
+
+# Extra metrics
+colA, colB, colC = st.columns(3)
+
+with colA:
+    st.metric("Runs Left", runs_left)
+
+with colB:
+    st.metric("Balls Left", balls_left)
+
+with colC:
+    st.metric("Required Run Rate", round(required_rr, 2))
 
 # -------------------------------
 # VISUALIZATION
